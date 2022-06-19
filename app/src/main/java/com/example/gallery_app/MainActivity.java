@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             SavePicture(imageBitmap);
+            MostrarImagen();
         }
     }
 
