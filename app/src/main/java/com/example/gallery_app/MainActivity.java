@@ -21,6 +21,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -59,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private void InicializarControles() {
         btnabrircamara = (FloatingActionButton) findViewById(R.id.btnAbrircamara);
         contenedor_imagen = (GridView) findViewById(R.id.foto);
-        loadImages();
+        LoadImages();
+        VerImagen();
         //MostrarImagen();
     }
 
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             SavePicture(imageBitmap);
-            loadImages();
+            LoadImages();
             //MostrarImagen();
         }
     }
@@ -187,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         return images;
     }
 
-    public void loadImages() {
+    public void LoadImages() {
         List<String> imagesPath;
         imagesPath = this.RecibirImagenes();
 
@@ -195,5 +197,16 @@ public class MainActivity extends AppCompatActivity {
             AdapterImages adapter = new AdapterImages(this, imagesPath);
             contenedor_imagen.setAdapter(adapter);
         }
+    }
+
+    private void VerImagen(){
+        contenedor_imagen.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent intent = new Intent(getApplicationContext(), foto_seleccionada.class);
+                intent.putExtra("foto", RecibirImagenes().get(position));
+                startActivity(intent);
+            }
+        });
     }
 }

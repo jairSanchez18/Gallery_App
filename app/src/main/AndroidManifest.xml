@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.gallery_app">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +19,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gallery_App"
         tools:targetApi="31">
+        <activity
+            android:name=".foto_seleccionada"
+            android:exported="false"
+            android:label="Foto"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
