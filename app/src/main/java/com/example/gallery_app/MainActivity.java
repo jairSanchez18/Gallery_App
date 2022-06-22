@@ -26,7 +26,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -113,11 +118,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            SharedPreferences mSharedPreferences = getSharedPreferences("Imagen_preferences", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = mSharedPreferences.edit();
-            editor.putString("keyStoredImage", "");
-            editor.commit();
-
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             SavePicture(imageBitmap);
@@ -126,31 +126,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SavePicture(Bitmap imageBitmap) {
-        SharedPreferences mSharedPreferences = getSharedPreferences("Imagen_preferences", Context.MODE_PRIVATE);
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] compressImage = baos.toByteArray();
 
-        byte[] compressImage = baos.toByteArray();
-        String sEncodedImage = Base64.encodeToString(compressImage, Base64.DEFAULT);
+            FileOutputStream out = getApplicationContext().openFileOutput("imagen.png", Context.MODE_PRIVATE);
 
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString("keyStoredImage", sEncodedImage);
-        editor.commit();
+            out.write(compressImage);
+            out.close();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Error SavePicture... " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void MostrarImagen() {
-        SharedPreferences mSharedPreferences = getSharedPreferences("Imagen_preferences", Context.MODE_PRIVATE);
+        try {
+            FileInputStream input = new FileInputStream(getApplicationContext().getFilesDir().getPath()+"/imagen.png");
 
-        if (mSharedPreferences.contains("keyStoredImage")) {
+            Bitmap bitmap = BitmapFactory.decodeStream(input);
 
-            String encodedImage = mSharedPreferences.getString("keyStoredImage", null);
-
-            byte[] b = Base64.decode(encodedImage, Base64.DEFAULT);
-
-            Bitmap bitmapImage = BitmapFactory.decodeByteArray(b, 0, b.length);
-
-            imgmostrarimagen.setImageBitmap(bitmapImage);
+            imgmostrarimagen.setImageBitmap(bitmap);
+        } catch (Exception e) {
+            Toast.makeText(this, "Error MostrarImagen... " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 }
