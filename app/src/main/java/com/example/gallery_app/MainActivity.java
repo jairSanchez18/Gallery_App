@@ -1,7 +1,9 @@
 package com.example.gallery_app;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -19,6 +21,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,16 +31,21 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     FloatingActionButton btnabrircamara;
-    ImageView imgmostrarimagen;
+    GridView contenedor_imagen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void InicializarControles() {
         btnabrircamara = (FloatingActionButton) findViewById(R.id.btnAbrircamara);
-        imgmostrarimagen = (ImageView) findViewById(R.id.imgMostrarimagen);
-        MostrarImagen();
+        contenedor_imagen = (GridView) findViewById(R.id.foto);
+        loadImages();
+        //MostrarImagen();
     }
 
     private void TomarFoto() {
@@ -114,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -121,10 +131,12 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             SavePicture(imageBitmap);
-            MostrarImagen();
+            loadImages();
+            //MostrarImagen();
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void SavePicture(Bitmap imageBitmap) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -132,7 +144,11 @@ public class MainActivity extends AppCompatActivity {
 
             byte[] compressImage = baos.toByteArray();
 
-            FileOutputStream out = getApplicationContext().openFileOutput("imagen.png", Context.MODE_PRIVATE);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("ddMMyyyy-HH:mm:ss");
+
+            String nombre_imagen = "IMG-" + dtf.format(LocalDateTime.now()) + ".png";
+
+            FileOutputStream out = getApplicationContext().openFileOutput(nombre_imagen, Context.MODE_PRIVATE);
 
             out.write(compressImage);
             out.close();
@@ -141,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Error SavePicture... " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
+/*
     private void MostrarImagen() {
         try {
             FileInputStream input = new FileInputStream(getApplicationContext().getFilesDir().getPath()+"/imagen.png");
@@ -151,6 +167,33 @@ public class MainActivity extends AppCompatActivity {
             imgmostrarimagen.setImageBitmap(bitmap);
         } catch (Exception e) {
             Toast.makeText(this, "Error MostrarImagen... " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+*/
+
+    private List<String> RecibirImagenes() {
+        List<String> images = new ArrayList<>();
+
+        File f = new File(getApplicationContext().getFilesDir().getPath());
+        File[] files = f.listFiles();
+        if (f.exists()) {
+            if (files.length != 0) {
+                for (File file : files) {
+                    //Toast.makeText(_context, ""+file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                    images.add(file.getAbsolutePath());
+                }
+            }
+        }
+        return images;
+    }
+
+    public void loadImages() {
+        List<String> imagesPath;
+        imagesPath = this.RecibirImagenes();
+
+        if(imagesPath.size() != 0) {
+            AdapterImages adapter = new AdapterImages(this, imagesPath);
+            contenedor_imagen.setAdapter(adapter);
         }
     }
 }

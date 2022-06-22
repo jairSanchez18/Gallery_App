@@ -13,4 +13,10 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.FBoton" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorSecondary">@color/purple_500</item>
+        <item name="colorOnSecondary">@color/white</item>
+    </style>
+
 </resources>
