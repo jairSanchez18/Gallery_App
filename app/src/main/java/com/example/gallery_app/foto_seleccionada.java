@@ -19,6 +19,8 @@ import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.gallery_app.Alerta.Alerta;
+
 import java.io.File;
 import java.util.Locale;
 
@@ -56,13 +58,8 @@ public class foto_seleccionada extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.delete:
-                boolean eliminado = new File(String.valueOf(ruta)).delete();
-                if (eliminado) {
-                    Toast.makeText(this, "Imagen eliminada", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, MainActivity.class));
-                } else {
-                    Toast.makeText(this, "Ocurrio un error al eliminar la foto", Toast.LENGTH_SHORT).show();
-                }
+                Alerta alerta = new Alerta(ruta);
+                alerta.show(getSupportFragmentManager(), "alertTag");
                 break;
         }
         return true;
