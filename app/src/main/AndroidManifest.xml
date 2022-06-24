@@ -20,18 +20,22 @@
         android:theme="@style/Theme.Gallery_App"
         tools:targetApi="31">
         <activity
-            android:name=".foto_seleccionada"
-            android:exported="false"
-            android:label="Foto" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".splash_screen"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".foto_seleccionada"
+            android:exported="false"
+            android:label="Vista previa de foto" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
