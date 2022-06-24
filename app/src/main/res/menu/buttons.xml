@@ -6,6 +6,5 @@
         android:icon="@drawable/ic_baseline_delete_24"
         android:iconTint="@color/white"
         android:title="Borrar"
-        app:showAsAction="ifRoom">
-    </item>
+        app:showAsAction="ifRoom"></item>
 </menu>

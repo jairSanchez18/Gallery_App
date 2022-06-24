@@ -22,7 +22,7 @@
         <activity
             android:name=".foto_seleccionada"
             android:exported="false"
-            android:label="Foto"/>
+            android:label="Foto" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

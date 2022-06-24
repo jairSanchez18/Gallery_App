@@ -3,9 +3,14 @@ package com.example.gallery_app;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +20,7 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import java.io.File;
+import java.util.Locale;
 
 public class foto_seleccionada extends AppCompatActivity {
 
